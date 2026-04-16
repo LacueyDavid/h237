@@ -1,12 +1,11 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Map, Compass, CalendarDays, Route } from 'lucide-react';
+import { Home, Map, Compass, CalendarDays } from 'lucide-react';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Accueil' },
   { to: '/carte', icon: Map, label: 'Carte' },
   { to: '/quetes', icon: Compass, label: 'Quêtes' },
   { to: '/evenements', icon: CalendarDays, label: 'Agenda' },
-  { to: '/parcours', icon: Route, label: 'Parcours' },
 ];
 
 export function BottomNav() {

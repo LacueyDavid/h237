@@ -3,6 +3,19 @@ import { useApp } from '../context/AppContext';
 import { ChevronRight, CheckCircle2, Circle, Sparkles, MapPin, Camera } from 'lucide-react';
 import { useState } from 'react';
 import { attractions } from '../data/attractions';
+import { Link } from 'react-router-dom';
+
+const RANK_NAMES = ['Explorateur', 'Aventurier', 'Gardien du Jardin', 'Légende du Parc'];
+const RANK_THRESHOLDS = [0, 3, 7, 15];
+const RANK_ICONS = ['🌱', '⚡', '🛡️', '👑'];
+
+function getRank(totalVisits: number) {
+  let rank = 0;
+  for (let i = RANK_THRESHOLDS.length - 1; i >= 0; i--) {
+    if (totalVisits >= RANK_THRESHOLDS[i]) { rank = i; break; }
+  }
+  return { name: RANK_NAMES[rank], index: rank, next: rank < RANK_NAMES.length - 1 ? RANK_NAMES[rank + 1] : null, visitsToNext: rank < RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rank + 1] - totalVisits : 0 };
+}
 
 const difficultyColors = {
   facile: 'bg-jardin-100 text-jardin-700',
@@ -20,14 +33,88 @@ const themeColors = {
 export function QuestsPage() {
   const { state, dispatch } = useApp();
   const [expandedId, setExpandedId] = useState<string | null>(state.activeQuestId);
+  const rank = getRank(state.user.totalVisits);
 
   return (
     <div className="px-4 py-4 space-y-4">
       <div>
-        <h2 className="text-xl font-bold text-gray-800">🧭 Parcours & Quêtes</h2>
-        <p className="text-sm text-gray-500">Choisissez un parcours et gagnez des récompenses !</p>
+        <h2 className="text-xl font-bold text-gray-800">🧭 Quêtes & Aventure</h2>
+        <p className="text-sm text-gray-500">Progressez, gagnez des récompenses et montez en rang !</p>
       </div>
 
+      {/* Carnet d'Aventurier */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-3"
+      >
+        <h3 className="text-sm font-bold text-gray-800">📖 Mon Carnet d'Aventurier</h3>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xs text-gray-500">Rang actuel</p>
+            <p className="text-sm font-bold text-purple-600">{RANK_ICONS[rank.index]} {rank.name}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-gray-500">Visites</p>
+            <p className="text-sm font-bold text-jardin-600">{state.user.totalVisits}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-xs text-gray-500">Streak 🔥</p>
+            <p className="text-sm font-bold text-orange-500">{state.user.streak}x</p>
+          </div>
+        </div>
+        {rank.next && (
+          <div>
+            <div className="flex justify-between text-[10px] text-gray-400 mb-1">
+              <span>{rank.name}</span>
+              <span>{rank.next} (encore {rank.visitsToNext} visite{rank.visitsToNext > 1 ? 's' : ''})</span>
+            </div>
+            <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full transition-all"
+                style={{ width: `${Math.min(((state.user.totalVisits - RANK_THRESHOLDS[rank.index]) / (RANK_THRESHOLDS[rank.index + 1] - RANK_THRESHOLDS[rank.index])) * 100, 100)}%` }}
+              />
+            </div>
+          </div>
+        )}
+        {state.user.streak >= 2 && (
+          <p className="text-[10px] text-gold-500 font-medium">
+            🔥 Streak de {state.user.streak} visites ! {state.user.streak >= 5 ? '+50 pts bonus' : state.user.streak >= 3 ? '+25 pts bonus' : 'Encore 1 visite pour le bonus !'}
+          </p>
+        )}
+
+        {/* Adopted Animal */}
+        {state.user.adoptedAnimal ? (
+          <div className="bg-jardin-50 rounded-xl p-3 border border-jardin-100">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs text-gray-500">Mon compagnon</p>
+                <p className="text-sm font-bold text-jardin-700">
+                  {(() => {
+                    const attr = attractions.find(a => a.id === state.user.adoptedAnimal!.attractionId);
+                    const animal = attr?.animals?.find(a => a.name === state.user.adoptedAnimal!.animalName);
+                    return `${animal?.image || '🐾'} ${state.user.adoptedAnimal.animalName}`;
+                  })()}
+                </p>
+                <p className="text-[10px] text-gray-400">Nourri {state.user.adoptedAnimal.feedCount} fois</p>
+              </div>
+              <button
+                onClick={() => dispatch({ type: 'FEED_ANIMAL' })}
+                className="px-3 py-1.5 rounded-lg bg-jardin-500 text-white text-xs font-bold shadow-sm"
+              >
+                🍎 Nourrir (+5 pts)
+              </button>
+            </div>
+          </div>
+        ) : (
+          <Link to="/carte" className="block bg-purple-50 rounded-xl p-3 border border-purple-100">
+            <p className="text-xs font-semibold text-purple-700">🐾 Adoptez un animal !</p>
+            <p className="text-[10px] text-purple-500">Visitez la Volière ou la Ferme pour adopter un compagnon</p>
+          </Link>
+        )}
+      </motion.div>
+
+      {/* Quests list */}
       <div className="space-y-3">
         {state.quests.map(quest => {
           const completedSteps = quest.steps.filter(s => s.completed).length;

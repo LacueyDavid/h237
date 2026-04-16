@@ -1,32 +1,20 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Map, Compass, Route, AlertTriangle, CalendarDays, Heart } from 'lucide-react';
+import { Map, Compass, AlertTriangle, CalendarDays } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { attractions } from '../data/attractions';
 import { parkEvents } from '../data/events';
-import { useState, useEffect, useMemo } from 'react';
-
-const RANK_NAMES = ['Explorateur', 'Aventurier', 'Gardien du Jardin', 'Légende du Parc'];
-const RANK_THRESHOLDS = [0, 3, 7, 15]; // totalVisits
-
-function getRank(totalVisits: number) {
-  let rank = 0;
-  for (let i = RANK_THRESHOLDS.length - 1; i >= 0; i--) {
-    if (totalVisits >= RANK_THRESHOLDS[i]) { rank = i; break; }
-  }
-  return { name: RANK_NAMES[rank], index: rank, next: rank < RANK_NAMES.length - 1 ? RANK_NAMES[rank + 1] : null, visitsToNext: rank < RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rank + 1] - totalVisits : 0 };
-}
+import { useState, useEffect } from 'react';
 
 const quickActions = [
   { to: '/carte', icon: Map, label: 'Carte', color: 'bg-jardin-500', desc: 'Explorer le parc' },
   { to: '/quetes', icon: Compass, label: 'Quêtes', color: 'bg-purple-500', desc: 'Parcours gamifiés' },
-  { to: '/parcours', icon: Route, label: 'Mon Parcours', color: 'bg-blue-500', desc: 'Wishlist & trajet' },
   { to: '/evenements', icon: CalendarDays, label: 'Événements', color: 'bg-pink-500', desc: 'Agenda du parc' },
   { to: '/signaler', icon: AlertTriangle, label: 'Signaler', color: 'bg-red-500', desc: 'Urgence' },
 ];
 
 export function HomePage() {
-  const { state, dispatch } = useApp();
+  const { state } = useApp();
   const [announcementIdx, setAnnouncementIdx] = useState(0);
 
   useEffect(() => {
@@ -69,86 +57,6 @@ export function HomePage() {
         <p className="text-xs text-jardin-100 mt-1">
           {state.user.points} points · Niveau {state.user.level}
         </p>
-      </motion.div>
-
-      {/* Carnet d'Aventurier — Rank + Streak + Adoption */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 space-y-3"
-      >
-        <h3 className="text-sm font-bold text-gray-800">📖 Mon Carnet d'Aventurier</h3>
-        {(() => {
-          const rank = getRank(state.user.totalVisits);
-          return (
-            <>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs text-gray-500">Rang actuel</p>
-                  <p className="text-sm font-bold text-purple-600">{['🌱', '⚡', '🛡️', '👑'][rank.index]} {rank.name}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-gray-500">Visites</p>
-                  <p className="text-sm font-bold text-jardin-600">{state.user.totalVisits}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-gray-500">Streak 🔥</p>
-                  <p className="text-sm font-bold text-orange-500">{state.user.streak}x</p>
-                </div>
-              </div>
-              {rank.next && (
-                <div>
-                  <div className="flex justify-between text-[10px] text-gray-400 mb-1">
-                    <span>{rank.name}</span>
-                    <span>{rank.next} (encore {rank.visitsToNext} visite{rank.visitsToNext > 1 ? 's' : ''})</span>
-                  </div>
-                  <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full transition-all"
-                      style={{ width: `${Math.min(((state.user.totalVisits - RANK_THRESHOLDS[rank.index]) / (RANK_THRESHOLDS[rank.index + 1] - RANK_THRESHOLDS[rank.index])) * 100, 100)}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-              {state.user.streak >= 2 && (
-                <p className="text-[10px] text-gold-500 font-medium">
-                  🔥 Streak de {state.user.streak} visites ! {state.user.streak >= 3 ? '+25 pts bonus' : state.user.streak >= 5 ? '+50 pts bonus' : 'Encore 1 visite pour le bonus !'}
-                </p>
-              )}
-            </>
-          );
-        })()}
-
-        {/* Adopted Animal */}
-        {state.user.adoptedAnimal ? (
-          <div className="bg-jardin-50 rounded-xl p-3 border border-jardin-100">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs text-gray-500">Mon animal adopté</p>
-                <p className="text-sm font-bold text-jardin-700">
-                  {(() => {
-                    const attr = attractions.find(a => a.id === state.user.adoptedAnimal!.attractionId);
-                    const animal = attr?.animals?.find(a => a.name === state.user.adoptedAnimal!.animalName);
-                    return `${animal?.image || '🐾'} ${state.user.adoptedAnimal.animalName}`;
-                  })()}
-                </p>
-                <p className="text-[10px] text-gray-400">Nourri {state.user.adoptedAnimal.feedCount} fois</p>
-              </div>
-              <button
-                onClick={() => dispatch({ type: 'FEED_ANIMAL' })}
-                className="px-3 py-1.5 rounded-lg bg-jardin-500 text-white text-xs font-bold shadow-sm"
-              >
-                🍎 Nourrir (+5 pts)
-              </button>
-            </div>
-          </div>
-        ) : (
-          <Link to="/carte" className="block bg-purple-50 rounded-xl p-3 border border-purple-100">
-            <p className="text-xs font-semibold text-purple-700">🐾 Adoptez un animal !</p>
-            <p className="text-[10px] text-purple-500">Visitez la Volière ou la Ferme pour adopter un compagnon virtuel (+50 pts)</p>
-          </Link>
-        )}
       </motion.div>
 
       {/* Quick Actions Grid */}
@@ -234,31 +142,6 @@ export function HomePage() {
               );
             })()}
           </Link>
-        </div>
-      )}
-
-      {/* Wishlist preview */}
-      {state.user.wishlist.length > 0 && (
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-bold text-gray-800">❤️ Ma Wishlist</h3>
-            <Link to="/parcours" className="text-jardin-600 text-sm font-medium">Voir parcours →</Link>
-          </div>
-          <div className="flex gap-2 overflow-x-auto no-scrollbar">
-            {state.user.wishlist.map(id => {
-              const a = attractions.find(a => a.id === id);
-              if (!a) return null;
-              return (
-                <div key={id} className="shrink-0 bg-white rounded-xl p-3 shadow-sm border border-gray-100 w-28 text-center">
-                  <span className="text-2xl">{a.image}</span>
-                  <p className="text-xs font-semibold text-gray-700 mt-1 truncate">{a.name}</p>
-                  {a.waitMinutes > 0 && (
-                    <p className="text-[10px] text-gray-400">⏱ {a.waitMinutes} min</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
         </div>
       )}
 

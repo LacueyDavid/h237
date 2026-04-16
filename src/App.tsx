@@ -5,7 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { MapPage } from './pages/MapPage';
 import { QuestsPage } from './pages/QuestsPage';
 import { AttractionsPage } from './pages/AttractionsPage';
-import { ParcoursPage } from './pages/ParcoursPage';
+
 import { ReportPage } from './pages/ReportPage';
 import { EventsPage } from './pages/EventsPage';
 
@@ -19,7 +19,7 @@ export default function App() {
             <Route path="/carte" element={<MapPage />} />
             <Route path="/quetes" element={<QuestsPage />} />
             <Route path="/attractions" element={<AttractionsPage />} />
-            <Route path="/parcours" element={<ParcoursPage />} />
+
             <Route path="/evenements" element={<EventsPage />} />
             <Route path="/signaler" element={<ReportPage />} />
           </Route>
