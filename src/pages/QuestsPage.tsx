@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
-import { ChevronRight, CheckCircle2, Circle, Sparkles, MapPin } from 'lucide-react';
+import { ChevronRight, CheckCircle2, Circle, Sparkles, MapPin, Camera } from 'lucide-react';
 import { useState } from 'react';
 import { attractions } from '../data/attractions';
 
@@ -128,6 +128,15 @@ export function QuestsPage() {
                                 )}
                                 {!step.completed && (
                                   <p className="text-[10px] text-gold-500 mt-1 italic">💡 {step.hint}</p>
+                                )}
+                                {!step.completed && step.requiresPhoto && (
+                                  <button
+                                    onClick={() => dispatch({ type: 'COMPLETE_QUEST_STEP', questId: quest.id, stepId: step.id })}
+                                    className="mt-2 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold shadow-sm"
+                                  >
+                                    <Camera className="w-3.5 h-3.5" />
+                                    📸 Prendre une photo
+                                  </button>
                                 )}
                               </div>
                             </div>

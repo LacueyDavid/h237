@@ -1,12 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Map, Compass, MessageCircle, User } from 'lucide-react';
+import { Home, Map, Compass, Route, AlertTriangle } from 'lucide-react';
 
 const navItems = [
   { to: '/', icon: Home, label: 'Accueil' },
   { to: '/carte', icon: Map, label: 'Carte' },
   { to: '/quetes', icon: Compass, label: 'Quêtes' },
-  { to: '/chat', icon: MessageCircle, label: 'Guide' },
-  { to: '/profil', icon: User, label: 'Profil' },
+  { to: '/parcours', icon: Route, label: 'Parcours' },
+  { to: '/signaler', icon: AlertTriangle, label: 'Signaler' },
 ];
 
 export function BottomNav() {

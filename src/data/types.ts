@@ -11,6 +11,16 @@ export interface Attraction {
   accessible: boolean;
   image: string;
   icon: string;
+  animals?: Animal[];
+}
+
+export interface Animal {
+  name: string;
+  species: string;
+  bio: string;
+  funFact: string;
+  favoriteSpot: string;
+  image: string;
 }
 
 export interface Quest {
@@ -32,22 +42,23 @@ export interface QuestStep {
   attractionId?: string;
   hint: string;
   completed: boolean;
+  requiresPhoto?: boolean;
 }
 
-export interface Badge {
+export interface Report {
   id: string;
-  name: string;
+  type: 'maintenance' | 'comportement' | 'enfant_perdu' | 'autre';
   description: string;
-  icon: string;
-  unlocked: boolean;
-  unlockedAt?: string;
-  category: 'exploration' | 'quete' | 'social' | 'defi';
+  location?: string;
+  timestamp: Date;
+  status: 'envoyé' | 'pris_en_charge' | 'résolu';
 }
 
-export interface ChatMessage {
+export interface Announcement {
   id: string;
-  role: 'user' | 'assistant';
+  title: string;
   content: string;
+  type: 'info' | 'urgent' | 'promo' | 'event';
   timestamp: Date;
 }
 
@@ -56,17 +67,15 @@ export interface UserProfile {
   avatar: string;
   points: number;
   level: number;
-  badges: string[];
   completedQuests: string[];
   visitedAttractions: string[];
+  wishlist: string[];
   accessibilityPrefs: AccessibilityPrefs;
 }
 
 export interface AccessibilityPrefs {
   wheelchair: boolean;
   reducedMobility: boolean;
-  visualImpairment: boolean;
-  hearingImpairment: boolean;
   withChildren: boolean;
   childAge?: number;
 }

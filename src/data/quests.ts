@@ -17,6 +17,7 @@ export const quests: Quest[] = [
         description: 'Trouvez le perroquet ara bleu et comptez ses couleurs.',
         attractionId: 'grande-voliere',
         hint: 'Cherchez près de l\'entrée principale de la volière',
+        requiresPhoto: true,
         completed: false,
       },
       {
@@ -25,6 +26,7 @@ export const quests: Quest[] = [
         description: 'Quel animal fait "bêê" ? Prenez une photo avec lui !',
         attractionId: 'ferme-normande',
         hint: 'Les moutons sont dans l\'enclos à gauche',
+        requiresPhoto: true,
         completed: false,
       },
       {
@@ -123,6 +125,7 @@ export const quests: Quest[] = [
         title: 'Photo de famille',
         description: 'Prenez une photo de famille devant l\'entrée du parc.',
         hint: 'Le spot idéal est devant la fontaine',
+        requiresPhoto: true,
         completed: false,
       },
       {

@@ -1,14 +1,13 @@
 import { createContext, useContext, useReducer, type ReactNode } from 'react';
-import type { UserProfile, AccessibilityPrefs, ChatMessage } from '../data/types';
-import { badges as defaultBadges } from '../data/badges';
+import type { UserProfile, AccessibilityPrefs, Report, Announcement } from '../data/types';
 import { quests as defaultQuests } from '../data/quests';
-import type { Badge, Quest } from '../data/types';
+import type { Quest } from '../data/types';
 
 interface AppState {
   user: UserProfile;
-  badges: Badge[];
   quests: Quest[];
-  chatMessages: ChatMessage[];
+  reports: Report[];
+  announcements: Announcement[];
   activeQuestId: string | null;
 }
 
@@ -17,9 +16,33 @@ type Action =
   | { type: 'COMPLETE_QUEST_STEP'; questId: string; stepId: string }
   | { type: 'SET_ACTIVE_QUEST'; questId: string | null }
   | { type: 'ADD_POINTS'; points: number }
-  | { type: 'UNLOCK_BADGE'; badgeId: string }
-  | { type: 'ADD_CHAT_MESSAGE'; message: ChatMessage }
+  | { type: 'TOGGLE_WISHLIST'; attractionId: string }
+  | { type: 'ADD_REPORT'; report: Report }
   | { type: 'UPDATE_ACCESSIBILITY'; prefs: Partial<AccessibilityPrefs> };
+
+const initialAnnouncements: Announcement[] = [
+  {
+    id: 'a1',
+    title: '🎉 Ouverture de la saison !',
+    content: 'Le parc est ouvert tous les jours de 10h à 19h. Profitez des beaux jours !',
+    type: 'info',
+    timestamp: new Date(),
+  },
+  {
+    id: 'a2',
+    title: '🎠 Nouveau manège',
+    content: 'Découvrez "Les Ailes du Jardin", notre toute nouvelle attraction familiale.',
+    type: 'event',
+    timestamp: new Date(),
+  },
+  {
+    id: 'a3',
+    title: '🐣 Naissances à la Ferme',
+    content: 'Trois agneaux sont nés cette semaine à la Ferme Normande. Venez les découvrir !',
+    type: 'info',
+    timestamp: new Date(),
+  },
+];
 
 const initialState: AppState = {
   user: {
@@ -27,20 +50,18 @@ const initialState: AppState = {
     avatar: '🌳',
     points: 50,
     level: 1,
-    badges: ['premier-pas'],
     completedQuests: [],
     visitedAttractions: [],
+    wishlist: [],
     accessibilityPrefs: {
       wheelchair: false,
       reducedMobility: false,
-      visualImpairment: false,
-      hearingImpairment: false,
       withChildren: false,
     },
   },
-  badges: defaultBadges,
   quests: defaultQuests,
-  chatMessages: [],
+  reports: [],
+  announcements: initialAnnouncements,
   activeQuestId: null,
 };
 
@@ -94,20 +115,20 @@ function appReducer(state: AppState, action: Action): AppState {
           level: Math.floor((state.user.points + action.points) / 100) + 1,
         },
       };
-    case 'UNLOCK_BADGE': {
-      if (state.user.badges.includes(action.badgeId)) return state;
+    case 'TOGGLE_WISHLIST': {
+      const inList = state.user.wishlist.includes(action.attractionId);
       return {
         ...state,
-        user: { ...state.user, badges: [...state.user.badges, action.badgeId] },
-        badges: state.badges.map(b =>
-          b.id === action.badgeId
-            ? { ...b, unlocked: true, unlockedAt: new Date().toISOString() }
-            : b
-        ),
+        user: {
+          ...state.user,
+          wishlist: inList
+            ? state.user.wishlist.filter(id => id !== action.attractionId)
+            : [...state.user.wishlist, action.attractionId],
+        },
       };
     }
-    case 'ADD_CHAT_MESSAGE':
-      return { ...state, chatMessages: [...state.chatMessages, action.message] };
+    case 'ADD_REPORT':
+      return { ...state, reports: [...state.reports, action.report] };
     case 'UPDATE_ACCESSIBILITY':
       return {
         ...state,

@@ -5,9 +5,8 @@ import { HomePage } from './pages/HomePage';
 import { MapPage } from './pages/MapPage';
 import { QuestsPage } from './pages/QuestsPage';
 import { AttractionsPage } from './pages/AttractionsPage';
-import { ChatPage } from './pages/ChatPage';
-import { ARPage } from './pages/ARPage';
-import { ProfilePage } from './pages/ProfilePage';
+import { ParcoursPage } from './pages/ParcoursPage';
+import { ReportPage } from './pages/ReportPage';
 
 export default function App() {
   return (
@@ -19,9 +18,8 @@ export default function App() {
             <Route path="/carte" element={<MapPage />} />
             <Route path="/quetes" element={<QuestsPage />} />
             <Route path="/attractions" element={<AttractionsPage />} />
-            <Route path="/chat" element={<ChatPage />} />
-            <Route path="/ar" element={<ARPage />} />
-            <Route path="/profil" element={<ProfilePage />} />
+            <Route path="/parcours" element={<ParcoursPage />} />
+            <Route path="/signaler" element={<ReportPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

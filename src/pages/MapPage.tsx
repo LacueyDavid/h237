@@ -122,6 +122,29 @@ export function MapPage() {
                     {visited && (
                       <div className="text-xs text-jardin-600 font-semibold text-center">✓ Déjà visité !</div>
                     )}
+                    {/* Wishlist toggle */}
+                    <button
+                      onClick={() => dispatch({ type: 'TOGGLE_WISHLIST', attractionId: attraction.id })}
+                      className={`w-full text-xs rounded-lg py-1.5 font-semibold mt-1 transition-colors ${
+                        state.user.wishlist.includes(attraction.id)
+                          ? 'bg-pink-100 text-pink-600'
+                          : 'bg-gray-100 text-gray-500 hover:bg-pink-50'
+                      }`}
+                    >
+                      {state.user.wishlist.includes(attraction.id) ? '❤️ Dans ma wishlist' : '🤍 Ajouter à ma wishlist'}
+                    </button>
+                    {/* Animal bios */}
+                    {attraction.animals && attraction.animals.length > 0 && (
+                      <div className="mt-2 border-t border-gray-100 pt-2">
+                        <p className="text-xs font-bold text-gray-700 mb-1">🐾 Animaux</p>
+                        {attraction.animals.map(animal => (
+                          <div key={animal.name} className="mb-1.5">
+                            <p className="text-xs font-semibold text-gray-700">{animal.name} <span className="text-gray-400">· {animal.species}</span></p>
+                            <p className="text-[10px] text-gray-500">{animal.funFact}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </Popup>
               </Marker>
