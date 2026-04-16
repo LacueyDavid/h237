@@ -212,10 +212,10 @@ export const eventCategoryLabels: Record<ParkEvent['category'], string> = {
 };
 
 export const eventCategoryColors: Record<ParkEvent['category'], string> = {
-  fete: 'bg-pink-100 text-pink-700',
-  spectacle: 'bg-purple-100 text-purple-700',
-  atelier: 'bg-orange-100 text-orange-700',
+  fete: 'bg-gold-100 text-gold-600',
+  spectacle: 'bg-manege-light text-manege-dark',
+  atelier: 'bg-ferme-warm/20 text-ferme-dark',
   saison: 'bg-jardin-100 text-jardin-700',
-  nature: 'bg-emerald-100 text-emerald-700',
-  musique: 'bg-blue-100 text-blue-700',
+  nature: 'bg-jardin-200 text-jardin-800',
+  musique: 'bg-ferme-sky/20 text-manege-dark',
 };

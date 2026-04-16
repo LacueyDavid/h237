@@ -170,7 +170,7 @@ export function EventsPage() {
 
       {/* Today highlight */}
       {todayEvents.length > 0 && (
-        <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-4 text-white shadow-lg">
+        <div className="bg-jardin-600 rounded-2xl p-4 text-white shadow-lg">
           <div className="flex items-center gap-2 mb-2">
             <Star className="w-5 h-5" />
             <h3 className="font-bold">Aujourd'hui au parc</h3>
@@ -261,7 +261,7 @@ export function EventsPage() {
                     key={day}
                     className={`relative p-1 text-center text-xs rounded-lg ${
                       today ? 'bg-jardin-600 text-white font-bold' :
-                      dayEvents.length > 0 ? 'bg-purple-50 font-semibold text-purple-700' :
+                      dayEvents.length > 0 ? 'bg-jardin-100 font-semibold text-jardin-700' :
                       'text-gray-600'
                     }`}
                   >

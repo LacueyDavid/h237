@@ -204,9 +204,9 @@ export const categoryLabels: Record<Attraction['category'], string> = {
 };
 
 export const categoryColors: Record<Attraction['category'], string> = {
-  manege: 'bg-purple-100 text-purple-700',
-  spectacle: 'bg-pink-100 text-pink-700',
+  manege: 'bg-manege-light text-manege-dark',
+  spectacle: 'bg-gold-100 text-gold-600',
   nature: 'bg-jardin-100 text-jardin-700',
-  restauration: 'bg-gold-100 text-gold-600',
-  jeu: 'bg-blue-100 text-blue-700',
+  restauration: 'bg-ferme-warm/20 text-ferme-dark',
+  jeu: 'bg-ferme-sky/20 text-manege-dark',
 };

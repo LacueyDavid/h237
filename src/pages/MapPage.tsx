@@ -21,8 +21,8 @@ function createEmojiIcon(emoji: string, visited: boolean, inRoute?: boolean) {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: ${inRoute ? '#ede9fe' : visited ? '#dcfce7' : 'white'};
-      border: 2px solid ${inRoute ? '#7c3aed' : visited ? '#22c55e' : '#e5e7eb'};
+      background: ${inRoute ? '#c0c5e0' : visited ? '#dbf0e4' : 'white'};
+      border: 2px solid ${inRoute ? '#1f305e' : visited ? '#005629' : '#e5e7eb'};
       border-radius: 50%;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     ">${emoji}</div>`,
@@ -52,11 +52,11 @@ function createStepIcon(step: number) {
     className: '',
     html: `<div style="
       width: 24px; height: 24px;
-      background: #7c3aed;
+      background: #1f305e;
       color: white; font-size: 12px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
       border-radius: 50%;
-      box-shadow: 0 2px 6px rgba(124,58,237,0.4);
+      box-shadow: 0 2px 6px rgba(31,48,94,0.4);
       border: 2px solid white;
     ">${step}</div>`,
     iconSize: [24, 24],
@@ -220,7 +220,7 @@ export function MapPage() {
               <FitBounds positions={routePositions} />
               <Polyline
                 positions={routePositions}
-                pathOptions={{ color: '#7c3aed', weight: 4, dashArray: '8 8', opacity: 0.8 }}
+                pathOptions={{ color: '#1f305e', weight: 4, dashArray: '8 8', opacity: 0.8 }}
               />
             </>
           )}
@@ -278,7 +278,7 @@ export function MapPage() {
                       onClick={() => dispatch({ type: 'TOGGLE_WISHLIST', attractionId: attraction.id })}
                       className={`w-full text-xs rounded-lg py-1.5 font-semibold mt-1 transition-colors ${
                         state.user.wishlist.includes(attraction.id)
-                          ? 'bg-pink-100 text-pink-600' : 'bg-gray-100 text-gray-500 hover:bg-pink-50'
+                          ? 'bg-gold-100 text-gold-600' : 'bg-gray-100 text-gray-500 hover:bg-gold-50'
                       }`}
                     >
                       {state.user.wishlist.includes(attraction.id) ? '❤️ Dans mon parcours' : '🤍 Ajouter au parcours'}
@@ -293,7 +293,7 @@ export function MapPage() {
                             {(!state.user.adoptedAnimal || state.user.adoptedAnimal.animalName !== animal.name) && (
                               <button
                                 onClick={() => dispatch({ type: 'ADOPT_ANIMAL', animal: { animalName: animal.name, attractionId: attraction.id, adoptedAt: new Date(), feedCount: 0 } })}
-                                className="mt-1 text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-600 font-semibold hover:bg-purple-200"
+                                className="mt-1 text-[10px] px-2 py-0.5 rounded-full bg-manege-light text-manege-dark font-semibold hover:bg-manege-light/80"
                               >
                                 🐾 Adopter {animal.name}
                               </button>
@@ -327,11 +327,11 @@ export function MapPage() {
         {panelMode === 'hidden' && (
           <button
             onClick={() => { setPanelMode('setup'); setPanelExpanded(true); }}
-            className="absolute bottom-4 right-4 z-[1000] bg-gradient-to-r from-purple-600 to-indigo-600 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow"
+            className="absolute bottom-4 right-4 z-[1000] bg-manege-dark text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center hover:shadow-xl transition-shadow"
           >
             <Route className="w-6 h-6" />
             {wishlistAttractions.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-gold-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                 {wishlistAttractions.length}
               </span>
             )}
@@ -352,12 +352,12 @@ export function MapPage() {
               {/* Panel Handle */}
               <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                 <div className="flex items-center gap-2">
-                  <Route className="w-5 h-5 text-purple-600" />
+                  <Route className="w-5 h-5 text-manege-dark" />
                   <h3 className="font-bold text-sm text-gray-800">
                     {panelMode === 'setup' ? 'Mon Parcours' : 'Itinéraire'}
                   </h3>
                   {wishlistAttractions.length > 0 && (
-                    <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-xs bg-manege-light text-manege-dark px-2 py-0.5 rounded-full font-semibold">
                       {wishlistAttractions.length} étape{wishlistAttractions.length > 1 ? 's' : ''}
                     </span>
                   )}
@@ -382,9 +382,9 @@ export function MapPage() {
                       {/* Stats bar */}
                       {wishlistAttractions.length > 0 && (
                         <div className="flex gap-3 text-xs">
-                          <div className="flex-1 bg-purple-50 rounded-xl p-2.5 text-center">
-                            <p className="text-purple-400">Attractions</p>
-                            <p className="text-lg font-bold text-purple-600">{wishlistAttractions.length}</p>
+                          <div className="flex-1 bg-manege-light/30 rounded-xl p-2.5 text-center">
+                            <p className="text-manege-mid">Attractions</p>
+                            <p className="text-lg font-bold text-manege-dark">{wishlistAttractions.length}</p>
                           </div>
                           <div className="flex-1 bg-blue-50 rounded-xl p-2.5 text-center">
                             <p className="text-blue-400">Attente</p>
@@ -411,7 +411,7 @@ export function MapPage() {
                                     visited ? 'bg-jardin-50 opacity-60' : 'bg-gray-50'
                                   }`}
                                 >
-                                  <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-[10px] font-bold text-white shrink-0">
+                                  <div className="w-6 h-6 rounded-full bg-manege-dark flex items-center justify-center text-[10px] font-bold text-white shrink-0">
                                     {i + 1}
                                   </div>
                                   <span className="text-lg">{attraction.image}</span>
@@ -439,7 +439,7 @@ export function MapPage() {
                           {/* Start itinerary */}
                           <button
                             onClick={startItinerary}
-                            className="w-full py-2.5 rounded-xl text-sm font-bold bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md flex items-center justify-center gap-2"
+                            className="w-full py-2.5 rounded-xl text-sm font-bold bg-manege-dark text-white shadow-md flex items-center justify-center gap-2"
                           >
                             <Navigation className="w-4 h-4" />
                             Lancer l'itinéraire
@@ -502,7 +502,7 @@ export function MapPage() {
                               }`}
                             >
                               <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0 ${
-                                visited ? 'bg-jardin-500' : 'bg-purple-600'
+                                visited ? 'bg-jardin-600' : 'bg-manege-dark'
                               }`}>
                                 {visited ? '✓' : i + 1}
                               </div>

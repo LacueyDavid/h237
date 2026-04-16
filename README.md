@@ -1,4 +1,4 @@
-# 🌿 Accli'Guide — Le Compagnon du Jardin d'Acclimatation
+# 🌿 Comp'Accli — Le Compagnon du Jardin d'Acclimatation
 
 > **Hackathon H237** — Équipe [à compléter]
 > PWA mobile-first · React 19 + TypeScript + Vite 8 + Tailwind CSS v4
@@ -17,11 +17,11 @@ Le Jardin d'Acclimatation est le **plus ancien parc de loisirs de France** (1860
 2. **Visite sans suite** — L'enfant s'amuse, rentre chez lui, oublie. Aucun lien émotionnel durable avec le parc.
 3. **Pas de visibilité sur les événements** — Les parents ne savent pas qu'il y a une chasse aux œufs, un spectacle de Guignol ou un stage de cirque.
 
-### Slide 2 — La Solution : Accli'Guide (1 min)
+### Slide 2 — La Solution : Comp'Accli (1 min)
 
 Une **PWA** (Progressive Web App) que le visiteur ouvre sur son téléphone — **pas besoin de télécharger, pas de compte à créer**.
 
-Accli'Guide transforme la visite en **aventure interactive** et crée un lien durable entre l'enfant et le parc.
+Comp'Accli transforme la visite en **aventure interactive** et crée un lien durable entre l'enfant et le parc.
 
 **5 piliers :**
 - 🗺️ Carte interactive avec temps d'attente

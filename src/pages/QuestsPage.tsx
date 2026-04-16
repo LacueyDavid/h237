@@ -24,10 +24,10 @@ const difficultyColors = {
 };
 
 const themeColors = {
-  nature: 'from-jardin-400 to-emerald-500',
-  aventure: 'from-purple-500 to-indigo-600',
-  culture: 'from-gold-400 to-orange-500',
-  famille: 'from-pink-400 to-rose-500',
+  nature: 'from-jardin-400 to-jardin-600',
+  aventure: 'from-manege-dark to-manege-mid',
+  culture: 'from-gold-400 to-gold-600',
+  famille: 'from-ferme-warm to-ferme-sky',
 };
 
 export function QuestsPage() {
@@ -52,7 +52,7 @@ export function QuestsPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs text-gray-500">Rang actuel</p>
-            <p className="text-sm font-bold text-purple-600">{RANK_ICONS[rank.index]} {rank.name}</p>
+            <p className="text-sm font-bold text-manege-dark">{RANK_ICONS[rank.index]} {rank.name}</p>
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-500">Visites</p>
@@ -71,7 +71,7 @@ export function QuestsPage() {
             </div>
             <div className="bg-gray-100 rounded-full h-2 overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-purple-400 to-pink-500 rounded-full transition-all"
+                className="h-full bg-gradient-to-r from-manege-mid to-jardin-400 rounded-full transition-all"
                 style={{ width: `${Math.min(((state.user.totalVisits - RANK_THRESHOLDS[rank.index]) / (RANK_THRESHOLDS[rank.index + 1] - RANK_THRESHOLDS[rank.index])) * 100, 100)}%` }}
               />
             </div>
@@ -107,9 +107,9 @@ export function QuestsPage() {
             </div>
           </div>
         ) : (
-          <Link to="/carte" className="block bg-purple-50 rounded-xl p-3 border border-purple-100">
-            <p className="text-xs font-semibold text-purple-700">🐾 Adoptez un animal !</p>
-            <p className="text-[10px] text-purple-500">Visitez la Volière ou la Ferme pour adopter un compagnon</p>
+          <Link to="/carte" className="block bg-jardin-50 rounded-xl p-3 border border-jardin-200">
+            <p className="text-xs font-semibold text-jardin-700">🐾 Adoptez un animal !</p>
+            <p className="text-[10px] text-jardin-500">Visitez la Volière ou la Ferme pour adopter un compagnon</p>
           </Link>
         )}
       </motion.div>
@@ -219,7 +219,7 @@ export function QuestsPage() {
                                 {!step.completed && step.requiresPhoto && (
                                   <button
                                     onClick={() => dispatch({ type: 'COMPLETE_QUEST_STEP', questId: quest.id, stepId: step.id })}
-                                    className="mt-2 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold shadow-sm"
+                                    className="mt-2 flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-jardin-600 text-white text-xs font-bold shadow-sm"
                                   >
                                     <Camera className="w-3.5 h-3.5" />
                                     📸 Prendre une photo

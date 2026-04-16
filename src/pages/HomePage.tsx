@@ -7,9 +7,9 @@ import { parkEvents } from '../data/events';
 import { useState, useEffect } from 'react';
 
 const quickActions = [
-  { to: '/carte', icon: Map, label: 'Carte', color: 'bg-jardin-500', desc: 'Explorer le parc' },
-  { to: '/quetes', icon: Compass, label: 'Quêtes', color: 'bg-purple-500', desc: 'Parcours gamifiés' },
-  { to: '/evenements', icon: CalendarDays, label: 'Événements', color: 'bg-pink-500', desc: 'Agenda du parc' },
+  { to: '/carte', icon: Map, label: 'Carte', color: 'bg-jardin-600', desc: 'Explorer le parc' },
+  { to: '/quetes', icon: Compass, label: 'Quêtes', color: 'bg-manege-dark', desc: 'Parcours gamifiés' },
+  { to: '/evenements', icon: CalendarDays, label: 'Événements', color: 'bg-ferme-sky', desc: 'Agenda du parc' },
   { to: '/signaler', icon: AlertTriangle, label: 'Signaler', color: 'bg-red-500', desc: 'Urgence' },
 ];
 
@@ -39,7 +39,7 @@ export function HomePage() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-jardin-500 to-jardin-700 rounded-2xl p-5 text-white shadow-lg"
+        className="bg-gradient-to-br from-jardin-600 to-jardin-800 rounded-2xl p-5 text-white shadow-lg"
       >
         <p className="text-jardin-100 text-sm">Bienvenue au</p>
         <h2 className="text-2xl font-bold mb-1">Jardin d'Acclimatation</h2>
@@ -126,14 +126,14 @@ export function HomePage() {
               if (!quest) return null;
               const done = quest.steps.filter(s => s.completed).length;
               return (
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                <div className="bg-gradient-to-r from-manege-light/30 to-jardin-100 rounded-xl p-4 border border-manege-light">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xl">{quest.icon}</span>
                     <span className="font-bold text-gray-800">{quest.title}</span>
                   </div>
                   <div className="bg-white/60 rounded-full h-2 overflow-hidden">
                     <div
-                      className="h-full bg-purple-500 rounded-full transition-all"
+                      className="h-full bg-manege-dark rounded-full transition-all"
                       style={{ width: `${(done / quest.steps.length) * 100}%` }}
                     />
                   </div>
@@ -155,7 +155,7 @@ export function HomePage() {
             currentAnnouncement.type === 'urgent'
               ? 'bg-red-50 border-red-200'
               : currentAnnouncement.type === 'event'
-              ? 'bg-purple-50 border-purple-200'
+              ? 'bg-manege-light/20 border-manege-light'
               : 'bg-gold-50 border-gold-200'
           }`}
         >
