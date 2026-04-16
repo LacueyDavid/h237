@@ -9,7 +9,7 @@ const quickActions = [
   { to: '/carte', icon: Map, label: 'Carte', color: 'bg-jardin-500', desc: 'Explorer le parc' },
   { to: '/quetes', icon: Compass, label: 'Quêtes', color: 'bg-purple-500', desc: 'Parcours gamifiés' },
   { to: '/parcours', icon: Route, label: 'Mon Parcours', color: 'bg-blue-500', desc: 'Wishlist & trajet' },
-  { to: '/signaler', icon: AlertTriangle, label: 'Signaler', color: 'bg-red-500', desc: 'Urgence & maintenance' },
+  { to: '/signaler', icon: AlertTriangle, label: 'Signaler', color: 'bg-red-500', desc: 'Urgence' },
 ];
 
 export function HomePage() {
@@ -33,36 +33,6 @@ export function HomePage() {
 
   return (
     <div className="px-4 py-4 space-y-5">
-      {/* Announcements Banner */}
-      {currentAnnouncement && (
-        <motion.div
-          key={currentAnnouncement.id}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`rounded-xl p-3 border ${
-            currentAnnouncement.type === 'urgent'
-              ? 'bg-red-50 border-red-200'
-              : currentAnnouncement.type === 'event'
-              ? 'bg-purple-50 border-purple-200'
-              : 'bg-gold-50 border-gold-200'
-          }`}
-        >
-          <p className="font-bold text-sm text-gray-800">{currentAnnouncement.title}</p>
-          <p className="text-xs text-gray-600 mt-0.5">{currentAnnouncement.content}</p>
-          {state.announcements.length > 1 && (
-            <div className="flex gap-1 mt-2 justify-center">
-              {state.announcements.map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                    i === announcementIdx ? 'bg-jardin-500' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </motion.div>
-      )}
 
       {/* Welcome Banner */}
       <motion.div
@@ -197,6 +167,37 @@ export function HomePage() {
             })}
           </div>
         </div>
+      )}
+
+      {/* Announcements Banner */}
+      {currentAnnouncement && (
+        <motion.div
+          key={currentAnnouncement.id}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className={`rounded-xl p-3 border ${
+            currentAnnouncement.type === 'urgent'
+              ? 'bg-red-50 border-red-200'
+              : currentAnnouncement.type === 'event'
+              ? 'bg-purple-50 border-purple-200'
+              : 'bg-gold-50 border-gold-200'
+          }`}
+        >
+          <p className="font-bold text-sm text-gray-800">{currentAnnouncement.title}</p>
+          <p className="text-xs text-gray-600 mt-0.5">{currentAnnouncement.content}</p>
+          {state.announcements.length > 1 && (
+            <div className="flex gap-1 mt-2 justify-center">
+              {state.announcements.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                    i === announcementIdx ? 'bg-jardin-500' : 'bg-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+          )}
+        </motion.div>
       )}
 
       {/* Fun Fact */}
