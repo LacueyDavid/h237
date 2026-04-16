@@ -62,6 +62,28 @@ export interface Announcement {
   timestamp: Date;
 }
 
+export interface ParkEvent {
+  id: string;
+  title: string;
+  description: string;
+  date: Date;
+  endDate?: Date;
+  category: 'fete' | 'spectacle' | 'atelier' | 'saison' | 'nature' | 'musique';
+  image: string;
+  forKids: boolean;
+  ageRange?: string;
+  location?: string;
+  questId?: string;
+}
+
+export interface AdoptedAnimal {
+  animalName: string;
+  attractionId: string;
+  adoptedAt: Date;
+  feedCount: number;
+  lastFed?: Date;
+}
+
 export interface UserProfile {
   name: string;
   avatar: string;
@@ -70,6 +92,10 @@ export interface UserProfile {
   completedQuests: string[];
   visitedAttractions: string[];
   wishlist: string[];
+  adoptedAnimal?: AdoptedAnimal;
+  streak: number;
+  lastVisitDate?: string;
+  totalVisits: number;
   accessibilityPrefs: AccessibilityPrefs;
 }
 

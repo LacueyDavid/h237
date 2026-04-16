@@ -12,10 +12,44 @@ export function ParcoursPage() {
 
   const totalWait = wishlistAttractions.reduce((sum, a) => sum + a.waitMinutes, 0);
 
-  // Simple route optimization: sort by proximity (lat/lng)
-  const optimizedRoute = [...wishlistAttractions].sort((a, b) => {
-    return a.lat - b.lat || a.lng - b.lng;
-  });
+  // Waze-style route optimization: nearest-neighbor with user-seeded start + congestion avoidance
+  const optimizedRoute = (() => {
+    if (wishlistAttractions.length <= 1) return [...wishlistAttractions];
+
+    const dist = (a: typeof wishlistAttractions[0], b: typeof wishlistAttractions[0]) =>
+      Math.sqrt((a.lat - b.lat) ** 2 + (a.lng - b.lng) ** 2);
+
+    // User-seeded start index for route diversity (different users get different starting points)
+    const seed = state.user.name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+      + state.user.totalVisits * 7
+      + state.user.points * 3;
+    const startIdx = seed % wishlistAttractions.length;
+
+    const visited = new Set<string>();
+    const route: typeof wishlistAttractions = [];
+    let current = wishlistAttractions[startIdx];
+
+    while (route.length < wishlistAttractions.length) {
+      route.push(current);
+      visited.add(current.id);
+
+      let best: typeof current | null = null;
+      let bestScore = Infinity;
+
+      for (const a of wishlistAttractions) {
+        if (visited.has(a.id)) continue;
+        // Score = distance weight + wait time penalty
+        // Lower score = better next step
+        const score = dist(current, a) * 10000 + a.waitMinutes * 2;
+        if (score < bestScore) {
+          bestScore = score;
+          best = a;
+        }
+      }
+      if (best) current = best;
+    }
+    return route;
+  })();
 
   return (
     <div className="px-4 py-4 space-y-5">

@@ -141,6 +141,19 @@ export function MapPage() {
                           <div key={animal.name} className="mb-1.5">
                             <p className="text-xs font-semibold text-gray-700">{animal.name} <span className="text-gray-400">· {animal.species}</span></p>
                             <p className="text-[10px] text-gray-500">{animal.funFact}</p>
+                            {(!state.user.adoptedAnimal || state.user.adoptedAnimal.animalName !== animal.name) && (
+                              <button
+                                onClick={() => dispatch({ type: 'ADOPT_ANIMAL', animal: { animalName: animal.name, attractionId: attraction.id, adoptedAt: new Date(), feedCount: 0 } })}
+                                className="mt-1 text-[10px] px-2 py-0.5 rounded-full bg-purple-100 text-purple-600 font-semibold hover:bg-purple-200"
+                              >
+                                🐾 Adopter {animal.name}
+                              </button>
+                            )}
+                            {state.user.adoptedAnimal?.animalName === animal.name && (
+                              <span className="mt-1 inline-block text-[10px] px-2 py-0.5 rounded-full bg-jardin-100 text-jardin-600 font-semibold">
+                                ✨ Mon compagnon !
+                              </span>
+                            )}
                           </div>
                         ))}
                       </div>

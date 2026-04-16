@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer, type ReactNode } from 'react';
-import type { UserProfile, AccessibilityPrefs, Report, Announcement } from '../data/types';
+import type { UserProfile, AccessibilityPrefs, Report, Announcement, AdoptedAnimal } from '../data/types';
 import { quests as defaultQuests } from '../data/quests';
 import type { Quest } from '../data/types';
 
@@ -18,6 +18,9 @@ type Action =
   | { type: 'ADD_POINTS'; points: number }
   | { type: 'TOGGLE_WISHLIST'; attractionId: string }
   | { type: 'ADD_REPORT'; report: Report }
+  | { type: 'ADOPT_ANIMAL'; animal: AdoptedAnimal }
+  | { type: 'FEED_ANIMAL' }
+  | { type: 'CHECK_IN_VISIT' }
   | { type: 'UPDATE_ACCESSIBILITY'; prefs: Partial<AccessibilityPrefs> };
 
 const initialAnnouncements: Announcement[] = [
@@ -53,6 +56,10 @@ const initialState: AppState = {
     completedQuests: [],
     visitedAttractions: [],
     wishlist: [],
+    adoptedAnimal: undefined,
+    streak: 1,
+    lastVisitDate: new Date().toISOString().split('T')[0],
+    totalVisits: 1,
     accessibilityPrefs: {
       wheelchair: false,
       reducedMobility: false,
@@ -129,6 +136,53 @@ function appReducer(state: AppState, action: Action): AppState {
     }
     case 'ADD_REPORT':
       return { ...state, reports: [...state.reports, action.report] };
+    case 'ADOPT_ANIMAL':
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          adoptedAnimal: action.animal,
+          points: state.user.points + 50,
+        },
+      };
+    case 'FEED_ANIMAL': {
+      if (!state.user.adoptedAnimal) return state;
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          adoptedAnimal: {
+            ...state.user.adoptedAnimal,
+            feedCount: state.user.adoptedAnimal.feedCount + 1,
+            lastFed: new Date(),
+          },
+          points: state.user.points + 5,
+        },
+      };
+    }
+    case 'CHECK_IN_VISIT': {
+      const today = new Date().toISOString().split('T')[0];
+      if (state.user.lastVisitDate === today) return state;
+      const lastDate = state.user.lastVisitDate ? new Date(state.user.lastVisitDate) : null;
+      const todayDate = new Date(today);
+      let newStreak = 1;
+      if (lastDate) {
+        const diffDays = Math.floor((todayDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays <= 30) newStreak = state.user.streak + 1;
+      }
+      const streakBonus = newStreak >= 3 ? 25 : newStreak >= 5 ? 50 : 0;
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          streak: newStreak,
+          lastVisitDate: today,
+          totalVisits: state.user.totalVisits + 1,
+          points: state.user.points + 15 + streakBonus,
+          level: Math.floor((state.user.points + 15 + streakBonus) / 100) + 1,
+        },
+      };
+    }
     case 'UPDATE_ACCESSIBILITY':
       return {
         ...state,
