@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --color-jardin-50: #f0fdf4;
+  --color-jardin-100: #dcfce7;
+  --color-jardin-200: #bbf7d0;
+  --color-jardin-300: #86efac;
+  --color-jardin-400: #4ade80;
+  --color-jardin-500: #22c55e;
+  --color-jardin-600: #16a34a;
+  --color-jardin-700: #15803d;
+  --color-jardin-800: #166534;
+  --color-jardin-900: #14532d;
+
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+
+  --color-cream: #fefdf8;
+  --color-bark: #3e2723;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  font-family: 'Nunito', 'Poppins', system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-cream);
+  min-height: 100dvh;
+  overscroll-behavior: none;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-jardin-300); border-radius: 2px; }
+
+.leaflet-container {
+  background: var(--color-jardin-50) !important;
+  font-family: inherit !important;
+}
