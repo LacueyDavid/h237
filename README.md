@@ -34,7 +34,7 @@ Comp'Accli transforme la visite en **aventure interactive** et crée un lien dur
 
 ### Slide 3 — Parcours Intelligent "Mode Waze" (3 min)
 
-**Le problème :** 200 familles arrivent à 10h, toutes vont au Speed Rocket → 35 min d'attente. Pendant ce temps, le Carrousel est à 0 min.
+i*Le problème :** 200 familles arrivent à 10h, toutes vont au Speed Rocket → 35 min d'attente. Pendant ce temps, le Carrousel est à 0 min.
 
 **Notre solution :** Un algorithme de **routage personnalisé** inspiré de Waze.
 

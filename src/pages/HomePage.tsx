@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Map, Compass, AlertTriangle, CalendarDays } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Map, Compass, AlertTriangle, CalendarDays, Heart, ArrowUpDown, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { attractions } from '../data/attractions';
+import { attractions, categoryLabels } from '../data/attractions';
 import { parkEvents } from '../data/events';
 import { useState, useEffect } from 'react';
+import type { Attraction } from '../data/types';
 
 const quickActions = [
   { to: '/carte', icon: Map, label: 'Carte', color: 'bg-jardin-600', desc: 'Explorer le parc' },
@@ -14,8 +15,11 @@ const quickActions = [
 ];
 
 export function HomePage() {
-  const { state } = useApp();
+  const { state, dispatch } = useApp();
   const [announcementIdx, setAnnouncementIdx] = useState(0);
+  const [showAll, setShowAll] = useState(false);
+  const [sortAsc, setSortAsc] = useState(true);
+  const [filterCategory, setFilterCategory] = useState<Attraction['category'] | 'all'>('all');
 
   useEffect(() => {
     if (state.announcements.length <= 1) return;
@@ -25,38 +29,80 @@ export function HomePage() {
     return () => clearInterval(timer);
   }, [state.announcements.length]);
 
-  const topAttractions = attractions
-    .filter(a => a.waitMinutes > 0)
-    .sort((a, b) => a.waitMinutes - b.waitMinutes)
-    .slice(0, 3);
-
   const currentAnnouncement = state.announcements[announcementIdx];
 
   return (
     <div className="px-4 py-4 space-y-5">
 
-      {/* Welcome Banner */}
+      {/* Hero Banner with Photo + Announcements */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-br from-jardin-600 to-jardin-800 rounded-2xl p-5 text-white shadow-lg"
+        className="relative rounded-2xl overflow-hidden shadow-lg"
       >
-        <p className="text-jardin-100 text-sm">Bienvenue au</p>
-        <h2 className="text-2xl font-bold mb-1">Jardin d'Acclimatation</h2>
-        <p className="text-jardin-100 text-sm">
-          {state.user.visitedAttractions.length} attraction{state.user.visitedAttractions.length !== 1 ? 's' : ''} visitée{state.user.visitedAttractions.length !== 1 ? 's' : ''} · {state.user.completedQuests.length} quête{state.user.completedQuests.length !== 1 ? 's' : ''} terminée{state.user.completedQuests.length !== 1 ? 's' : ''}
-        </p>
-        <div className="mt-3 bg-white/20 rounded-full h-2 overflow-hidden">
-          <motion.div
-            initial={{ width: 0 }}
-            animate={{ width: `${Math.min((state.user.points % 100), 100)}%` }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="h-full bg-gold-400 rounded-full"
-          />
+        <img
+          src="/hero-jardin.jpg"
+          alt="Jardin d'Acclimatation"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+
+        <div className="relative z-10 p-5 pt-8 pb-4">
+          <p className="text-white/80 text-sm">Bienvenue au</p>
+          <h2 className="text-2xl font-bold text-white mb-1">Jardin d'Acclimatation</h2>
+          <div className="flex items-center gap-3 text-white/80 text-sm mb-3">
+            <span>{state.user.visitedAttractions.length} attraction{state.user.visitedAttractions.length !== 1 ? 's' : ''}</span>
+            <span>·</span>
+            <span>{state.user.points} pts · Niv. {state.user.level}</span>
+          </div>
+
+          {/* Announcement overlay */}
+          {currentAnnouncement && (
+            <div className="bg-white/15 backdrop-blur-md rounded-xl p-3 border border-white/20">
+              <div className="flex items-center justify-between">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentAnnouncement.id}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex-1 min-w-0"
+                  >
+                    <p className="font-bold text-sm text-white">{currentAnnouncement.title}</p>
+                    <p className="text-xs text-white/70 mt-0.5 line-clamp-1">{currentAnnouncement.content}</p>
+                  </motion.div>
+                </AnimatePresence>
+                {state.announcements.length > 1 && (
+                  <div className="flex gap-1 ml-3 shrink-0">
+                    <button
+                      onClick={() => setAnnouncementIdx(i => (i - 1 + state.announcements.length) % state.announcements.length)}
+                      className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    >
+                      <ChevronLeft className="w-3 h-3 text-white" />
+                    </button>
+                    <button
+                      onClick={() => setAnnouncementIdx(i => (i + 1) % state.announcements.length)}
+                      className="p-1 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                    >
+                      <ChevronRight className="w-3 h-3 text-white" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              {state.announcements.length > 1 && (
+                <div className="flex gap-1 mt-2 justify-center">
+                  {state.announcements.map((_, i) => (
+                    <div
+                      key={i}
+                      className={`w-1.5 h-1.5 rounded-full transition-colors ${i === announcementIdx ? 'bg-white' : 'bg-white/30'}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
-        <p className="text-xs text-jardin-100 mt-1">
-          {state.user.points} points · Niveau {state.user.level}
-        </p>
       </motion.div>
 
       {/* Quick Actions Grid */}
@@ -87,34 +133,115 @@ export function HomePage() {
         </div>
       </div>
 
-      {/* Shortest Wait Times */}
-      <div>
-        <h3 className="text-lg font-bold text-gray-800 mb-3">⏱️ Moins d'attente</h3>
-        <div className="space-y-2">
-          {topAttractions.map((a, i) => (
-            <motion.div
-              key={a.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 + i * 0.1 }}
-              className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm border border-gray-100"
-            >
-              <span className="text-2xl">{a.image}</span>
-              <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-800 text-sm truncate">{a.name}</p>
-                <p className="text-xs text-gray-500">{a.category}</p>
+      {/* Temps d'attente */}
+      {(() => {
+        const withWait = attractions
+          .filter(a => a.waitMinutes > 0)
+          .filter(a => filterCategory === 'all' || a.category === filterCategory)
+          .sort((a, b) => sortAsc ? a.waitMinutes - b.waitMinutes : b.waitMinutes - a.waitMinutes);
+        const favAttractions = attractions.filter(a => state.user.wishlist.includes(a.id));
+        const displayed = showAll ? withWait : withWait.slice(0, 3);
+        return (
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-gray-800">⏱️ Temps d'attente</h3>
+              <button
+                onClick={() => setSortAsc(!sortAsc)}
+                className="flex items-center gap-1 text-xs text-jardin-600 font-medium"
+              >
+                <ArrowUpDown className="w-3.5 h-3.5" />
+                {sortAsc ? '↑ Croissant' : '↓ Décroissant'}
+              </button>
+            </div>
+
+            {/* Category filters */}
+            <div className="flex gap-1.5 items-center overflow-x-auto no-scrollbar mb-3">
+              <Filter className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+              {(['all', 'manege', 'spectacle', 'nature', 'restauration', 'jeu'] as const).map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setFilterCategory(cat)}
+                  className={`whitespace-nowrap px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all ${
+                    filterCategory === cat
+                      ? 'bg-jardin-600 text-white'
+                      : 'bg-white text-gray-600 border border-gray-200'
+                  }`}
+                >
+                  {cat === 'all' ? 'Tout' : categoryLabels[cat]}
+                </button>
+              ))}
+            </div>
+
+            {/* Favoris */}
+            {favAttractions.length > 0 && (
+              <div className="mb-3">
+                <p className="text-xs font-semibold text-gray-500 mb-1.5">❤️ Mes favoris</p>
+                <div className="flex gap-2 overflow-x-auto no-scrollbar">
+                  {favAttractions.map(a => (
+                    <div key={a.id} className="flex items-center gap-2 bg-red-50 border border-red-100 rounded-xl px-3 py-2 shrink-0">
+                      <span className="text-lg">{a.image}</span>
+                      <div>
+                        <p className="text-xs font-semibold text-gray-800 whitespace-nowrap">{a.name}</p>
+                        <p className={`text-xs font-bold ${
+                          a.waitMinutes === 0 ? 'text-jardin-600' :
+                          a.waitMinutes <= 10 ? 'text-jardin-600' :
+                          a.waitMinutes <= 20 ? 'text-gold-600' :
+                          'text-red-600'
+                        }`}>
+                          {a.waitMinutes === 0 ? 'Libre' : `${a.waitMinutes} min`}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className={`text-sm font-bold px-2 py-1 rounded-lg ${
-                a.waitMinutes <= 10 ? 'bg-jardin-100 text-jardin-700' :
-                a.waitMinutes <= 20 ? 'bg-gold-100 text-gold-600' :
-                'bg-red-100 text-red-600'
-              }`}>
-                {a.waitMinutes} min
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
+            )}
+
+            <div className="space-y-2">
+              {displayed.map((a, i) => {
+                const isFav = state.user.wishlist.includes(a.id);
+                return (
+                  <motion.div
+                    key={a.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 + i * 0.05 }}
+                    className="flex items-center gap-3 bg-white rounded-xl p-3 shadow-sm border border-gray-100"
+                  >
+                    <span className="text-2xl">{a.image}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-gray-800 text-sm truncate">{a.name}</p>
+                      <p className="text-xs text-gray-500">{a.category}</p>
+                    </div>
+                    <div className={`text-sm font-bold px-2 py-1 rounded-lg ${
+                      a.waitMinutes <= 10 ? 'bg-jardin-100 text-jardin-700' :
+                      a.waitMinutes <= 20 ? 'bg-gold-100 text-gold-600' :
+                      'bg-red-100 text-red-600'
+                    }`}>
+                      {a.waitMinutes} min
+                    </div>
+                    <button
+                      onClick={() => dispatch({ type: 'TOGGLE_WISHLIST', attractionId: a.id })}
+                      className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
+                    >
+                      <Heart className={`w-4 h-4 ${isFav ? 'fill-red-500 text-red-500' : 'text-gray-300'}`} />
+                    </button>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            {withWait.length > 3 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                className="mt-2 w-full py-2 text-sm font-semibold text-jardin-600 bg-jardin-50 rounded-xl hover:bg-jardin-100 transition-colors"
+              >
+                {showAll ? 'Voir moins' : `Voir tout (${withWait.length})`}
+              </button>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Active Quest */}
       {state.activeQuestId && (
@@ -145,36 +272,7 @@ export function HomePage() {
         </div>
       )}
 
-      {/* Announcements Banner */}
-      {currentAnnouncement && (
-        <motion.div
-          key={currentAnnouncement.id}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className={`rounded-xl p-3 border ${
-            currentAnnouncement.type === 'urgent'
-              ? 'bg-red-50 border-red-200'
-              : currentAnnouncement.type === 'event'
-              ? 'bg-manege-light/20 border-manege-light'
-              : 'bg-gold-50 border-gold-200'
-          }`}
-        >
-          <p className="font-bold text-sm text-gray-800">{currentAnnouncement.title}</p>
-          <p className="text-xs text-gray-600 mt-0.5">{currentAnnouncement.content}</p>
-          {state.announcements.length > 1 && (
-            <div className="flex gap-1 mt-2 justify-center">
-              {state.announcements.map((_, i) => (
-                <div
-                  key={i}
-                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
-                    i === announcementIdx ? 'bg-jardin-500' : 'bg-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </motion.div>
-      )}
+
 
       {/* Upcoming Events */}
       {(() => {

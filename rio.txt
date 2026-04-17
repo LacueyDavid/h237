@@ -1,0 +1,48 @@
+# 1: WAZ OPTI PARCOURS
+les problemes identifié:
+
+- attentes mal répartie
+- manque d'engagement clients
+- une app qui regroupe tous (visibilité, annonces, evenments, infos maneges...)
+
+#############################################3
+#############################################3
+
+Parcours Intelligent "Mode Waze" (3 min)
+Pour chaque utilisateur :
+1. L'enfant ajoute ses attractions favorites à sa "wishlist" ❤️
+2. L'algo calcule le parcours optimal (nearest-neighbor TSP modifié)
+3. Le point de départ est DIFFÉRENT pour chaque utilisateur
+   → seeded par son profil + nombre de visites + points
+4. Le score de chaque prochaine étape intègre :
+   - Distance de marche (géolocalisation)
+   - Temps d'attente en temps réel
+   - Pénalité de congestion (combien d'autres vont en ce moment)
+
+**Résultat :** Deux familles avec la même wishlist suivent des parcours différents. L'une commence par le Carrousel, l'autre par la Rivière Enchantée. **Les flux se répartissent naturellement.**
+
+#############################################3
+#############################################3
+
+# 2: LES QUETES
+#### Système de Rangs :
+- Explorateur | 1ère visite | Accès aux quêtes de base |
+- Aventurier | 3 visites | Quêtes exclusives débloquées |
+- Gardien du Jardin | 7 visites | Badge physique collector, nouvelles anecdotes animaux |
+- Légende du Parc | 15 visites | Statut ambassadeur, accès aux coulisses
+
+#### Streak de Visite (effet Duolingo) :
+- L'app compte les visites **dans les 30 jours** → streak
+- Streak ×3 : **+25 points bonus** par visite
+- Streak ×5 : **+50 points bonus** par visite
+- pas envie de casser sa série
+
+#### Coût de mise en œuvre :
+- **0€** pour le digital (tout est dans l'app)
+- **~0.30€/unité** pour les pin's collectors aux paliers (optionnel)
+- **ROI** : Si 1 famille sur 10 revient une fois de plus grâce au système → à 15€/pass × 4 personnes = **60€** de revenue incrémentale par famille fidélisée
+
+# 4: CALENDRIER: evenements et annonces
+- rio a appris un nouveau mot aujourdhui!
+
+# 3: SIGNALEMENT
